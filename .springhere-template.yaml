@@ -1,0 +1,23 @@
+schema_version: 1
+component: frontend
+cli_constraint: ">=0.1.0 <1.0.0"
+payload:
+  include:
+    - src
+    - public
+    - index.html
+    - package.json
+    - pnpm-lock.yaml
+    - tsconfig.json
+    - tsconfig.app.json
+    - tsconfig.node.json
+    - vite.config.ts
+    - .oxlintrc.json
+    - .env.example
+    - .gitignore
+    - README.md
+transforms:
+  - kind: json_string
+    path: package.json
+    key: name
+    value_from: frontend_package_name
