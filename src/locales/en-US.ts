@@ -14,6 +14,7 @@ export const enUS: Messages = {
     dashboard: 'Dashboard',
     users: 'Users',
     toggleSider: 'Toggle sidebar',
+    openMenu: 'Open menu',
     logout: 'Sign out',
   },
   role: {

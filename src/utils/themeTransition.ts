@@ -29,11 +29,14 @@ function canAnimateTheme() {
   )
 }
 
+const THEME_REVEAL_MS = 420
+
 function revealFromOrigin(origin: ThemeOrigin) {
-  const endRadius = Math.hypot(
-    Math.max(origin.x, window.innerWidth - origin.x),
-    Math.max(origin.y, window.innerHeight - origin.y),
-  )
+  const endRadius =
+    Math.hypot(
+      Math.max(origin.x, window.innerWidth - origin.x),
+      Math.max(origin.y, window.innerHeight - origin.y),
+    ) * 1.2
   document.documentElement.animate(
     {
       clipPath: [
@@ -42,8 +45,8 @@ function revealFromOrigin(origin: ThemeOrigin) {
       ],
     },
     {
-      duration: 480,
-      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+      duration: THEME_REVEAL_MS,
+      easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
       fill: 'both',
       pseudoElement: '::view-transition-new(root)',
     },

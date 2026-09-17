@@ -84,6 +84,32 @@ body {
   background: var(--color-surface);
 }
 
+@media (max-width: 767px) {
+  .app-shell-content {
+    padding: 12px;
+  }
+}
+
+.app-mobile-drawer .ant-drawer-content,
+.app-mobile-drawer .ant-drawer-content-wrapper,
+.app-mobile-drawer .ant-drawer-section,
+.app-mobile-drawer .ant-drawer-header,
+.app-mobile-drawer .ant-drawer-body {
+  background: #15211f !important;
+  color: #e4eeea;
+}
+
+.app-mobile-drawer .ant-drawer-body {
+  height: 100%;
+  padding: 0;
+  overflow: auto;
+}
+
+.app-mobile-drawer .ant-menu {
+  background: transparent !important;
+  color: #e4eeea !important;
+}
+
 .app-sider {
   background: #15211f !important;
 }
@@ -93,8 +119,34 @@ body {
   height: 56px;
   align-items: center;
   gap: 10px;
+  padding-inline: 20px;
   overflow: hidden;
   border-bottom: 1px solid rgb(255 255 255 / 0.06);
+}
+
+.app-brand.is-collapsed {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.app-sider-menu {
+  width: 100% !important;
+  padding-top: 8px;
+}
+
+.app-sider-menu.ant-menu-inline-collapsed {
+  width: 100% !important;
+}
+
+.app-sider-menu.ant-menu-inline-collapsed .ant-menu-item,
+.app-sider-menu.ant-menu-inline-collapsed .ant-menu-submenu-title {
+  display: flex;
+  justify-content: center;
+  padding-inline: 0 !important;
+}
+
+.app-sider-menu.ant-menu-inline-collapsed .ant-menu-item-icon {
+  margin-inline: 0 !important;
 }
 
 .app-brand-mark {
@@ -110,10 +162,27 @@ body {
   color: #f6faf8;
 }
 
-.app-header {
-  line-height: 1.5;
+.app-header.ant-layout-header {
+  height: 56px;
+  padding-inline: 8px;
+  line-height: 56px;
   background: var(--color-paper) !important;
   border-bottom: 1px solid var(--color-line);
+}
+
+@media (min-width: 768px) {
+  .app-header.ant-layout-header {
+    padding-inline: 12px;
+  }
+}
+
+.app-header-trigger {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
 }
 
 .app-user-chip {
@@ -516,10 +585,16 @@ html.theme-changing * {
   background: var(--app-surface);
 }
 
+::view-transition-group(root) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+  isolation: isolate;
 }
 
 ::view-transition-old(root) {

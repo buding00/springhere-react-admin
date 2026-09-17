@@ -12,6 +12,7 @@ export const zhCN = {
     dashboard: '控制台',
     users: '用户管理',
     toggleSider: '切换侧栏',
+    openMenu: '打开菜单',
     logout: '退出登录',
   },
   role: {
