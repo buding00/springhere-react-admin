@@ -13,7 +13,7 @@ export function RequestProgressBar() {
   return (
     <LoadingBar
       ref={ref}
-      color="#1677ff"
+      color="#1a7a6d"
       height={2}
       shadow={false}
       waitingTime={200}

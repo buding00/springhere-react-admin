@@ -2,8 +2,6 @@ import type { Messages } from './zh-CN.ts'
 
 export const enUS: Messages = {
   common: {
-    appName: 'SpringHere',
-    appSubtitle: 'Admin',
     retry: 'Retry',
     loading: 'Loading',
     language: 'Language',

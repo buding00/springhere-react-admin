@@ -3,6 +3,7 @@ import { Avatar, Button, Dropdown, Layout, Menu } from 'antd'
 import { useMemo, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { AppearanceControls } from '@/components/AppearanceControls.tsx'
+import { appConfig, localeText } from '@/config/index.ts'
 import { useI18n } from '@/locales/index.ts'
 import { navItemsForRole, pageTitle } from '@/router/nav.tsx'
 import { useAuth } from '@/store/auth.ts'
@@ -12,7 +13,7 @@ const { Header, Sider, Content } = Layout
 export function AppShell() {
   const [collapsed, setCollapsed] = useState(false)
   const { user, signOut } = useAuth()
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const location = useLocation()
   const navigate = useNavigate()
   const menuItems = useMemo(
@@ -32,7 +33,7 @@ export function AppShell() {
 
   const displayName = user?.remark || user?.email || ''
   const titleKey = pageTitle(location.pathname)
-  const headerTitle = titleKey ? t(titleKey) : location.pathname === '/403' ? t('forbidden.title') : t('common.appSubtitle')
+  const headerTitle = titleKey ? t(titleKey) : location.pathname === '/403' ? t('forbidden.title') : localeText(appConfig.subtitle, locale)
 
   return (
     <Layout hasSider className="app-shell overflow-hidden">
@@ -47,10 +48,8 @@ export function AppShell() {
         className="app-sider overflow-y-auto"
       >
         <div className={`app-brand ${collapsed ? 'px-3' : 'px-5'}`}>
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-brand text-sm font-extrabold text-white">
-            S
-          </span>
-          {!collapsed && <span className="truncate text-[15px] font-semibold tracking-wide text-white">{t('common.appName')}</span>}
+          <span className="app-brand-mark">{appConfig.mark}</span>
+          {!collapsed && <span className="truncate text-[15px] font-semibold tracking-wide text-[#e4eeea]">{appConfig.name}</span>}
         </div>
         <Menu
           theme="dark"
@@ -69,7 +68,7 @@ export function AppShell() {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed((value) => !value)}
           />
-          <p className="m-0 min-w-0 truncate text-[15px] font-medium text-slate-800 dark:text-slate-100">{headerTitle}</p>
+          <p className="m-0 min-w-0 truncate text-[15px] font-medium text-ink">{headerTitle}</p>
           <div className="flex-1" />
           <Dropdown
             menu={{
@@ -79,7 +78,7 @@ export function AppShell() {
                   disabled: true,
                   label: (
                     <div className="py-1 pr-6">
-                      <div className="font-medium text-slate-900 dark:text-slate-100">{displayName}</div>
+                      <div className="font-medium text-ink">{displayName}</div>
                       <div className="text-xs text-slate-400">{user?.email}</div>
                     </div>
                   ),
@@ -95,15 +94,15 @@ export function AppShell() {
             }}
           >
             <button type="button" className="app-user-chip">
-              <Avatar size={28} style={{ backgroundColor: '#1677ff', fontSize: 13 }}>
+              <Avatar size={28} style={{ backgroundColor: '#1a7a6d', fontSize: 13 }}>
                 {displayName.slice(0, 1).toUpperCase() || '?'}
               </Avatar>
-              <span className="hidden max-w-32 truncate text-sm text-slate-700 dark:text-slate-200 sm:inline">{displayName}</span>
+              <span className="hidden max-w-32 truncate text-sm text-ink sm:inline">{displayName}</span>
             </button>
           </Dropdown>
           <AppearanceControls />
         </Header>
-        <Content className="app-shell-content min-h-0 flex-1 overflow-auto p-3">
+        <Content className="app-shell-content min-h-0 flex-1 overflow-auto">
           <Outlet />
         </Content>
       </Layout>

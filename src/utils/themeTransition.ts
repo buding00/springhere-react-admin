@@ -5,9 +5,20 @@ type ThemeOrigin = { x: number; y: number }
 
 let themeTransitionRunning = false
 
+function setThemeChanging(active: boolean) {
+  document.documentElement.classList.toggle('theme-changing', active)
+}
+
 function applyThemeToggle() {
+  setThemeChanging(true)
   flushSync(() => {
     useThemeStore.getState().toggleMode()
+  })
+}
+
+function finishThemeChange() {
+  window.requestAnimationFrame(() => {
+    setThemeChanging(false)
   })
 }
 
@@ -43,6 +54,7 @@ export function toggleThemeWithTransition(origin: ThemeOrigin) {
   if (themeTransitionRunning) return
   if (!canAnimateTheme()) {
     applyThemeToggle()
+    finishThemeChange()
     return
   }
 
@@ -52,10 +64,12 @@ export function toggleThemeWithTransition(origin: ThemeOrigin) {
     void transition.ready.then(() => revealFromOrigin(origin)).catch(() => undefined)
     void transition.finished.finally(() => {
       themeTransitionRunning = false
+      finishThemeChange()
     })
   } catch {
     themeTransitionRunning = false
     applyThemeToggle()
+    finishThemeChange()
   }
 }
 

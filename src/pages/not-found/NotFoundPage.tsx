@@ -7,7 +7,7 @@ export function NotFoundPage() {
   const { t } = useI18n()
 
   return (
-    <div className="grid min-h-full place-items-center bg-surface px-4 dark:bg-slate-950">
+    <div className="grid min-h-full place-items-center bg-surface px-4">
       <Result
         status="404"
         title={t('notFound.title')}

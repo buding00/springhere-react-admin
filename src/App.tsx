@@ -7,6 +7,7 @@ import { RouterProvider } from 'react-router-dom'
 import { queryClient } from '@/api/queryClient.ts'
 import { ApiMessageBinder } from '@/components/ApiMessageBinder.tsx'
 import { RequestProgressBar } from '@/components/RequestProgressBar.tsx'
+import { appConfig, localeText } from '@/config/index.ts'
 import { useI18n } from '@/locales/index.ts'
 import { router } from '@/router/index.tsx'
 import { useAuthStore } from '@/store/auth.ts'
@@ -18,6 +19,10 @@ export function App() {
   const isDark = mode === 'dark'
 
   useEffect(() => {
+    document.title = localeText(appConfig.documentTitle, locale)
+  }, [locale])
+
+  useEffect(() => {
     void useAuthStore.getState().restoreSession()
   }, [])
 
@@ -25,36 +30,39 @@ export function App() {
     <ConfigProvider
       locale={locale === 'en-US' ? enUS : zhCN}
       theme={{
+        cssVar: {},
+        hashed: false,
         algorithm: isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
         token: {
-          colorPrimary: '#1677ff',
-          borderRadius: 8,
-          colorBgContainer: isDark ? '#0f172a' : '#ffffff',
-          colorBgLayout: isDark ? '#0b1220' : '#f3f5f8',
-          colorBorderSecondary: isDark ? '#1f2937' : '#e8edf3',
+          colorPrimary: '#1a7a6d',
+          borderRadius: 10,
+          colorBgContainer: isDark ? '#151e1c' : '#f6faf8',
+          colorBgLayout: isDark ? '#101816' : '#eef3f1',
+          colorBorderSecondary: isDark ? '#24332f' : '#cfdcd7',
+          colorText: isDark ? '#e4eeea' : '#1a2a28',
           fontFamily:
             '"PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif',
         },
         components: {
           Layout: {
-            headerBg: isDark ? '#111827' : '#ffffff',
-            siderBg: '#0f172a',
-            bodyBg: isDark ? '#0b1220' : '#f3f5f8',
+            headerBg: isDark ? '#151e1c' : '#f6faf8',
+            siderBg: '#15211f',
+            bodyBg: isDark ? '#101816' : '#eef3f1',
             headerHeight: 56,
           },
           Menu: {
-            darkItemBg: '#0f172a',
-            darkSubMenuItemBg: '#0f172a',
-            darkItemSelectedBg: '#1677ff',
-            darkItemHoverBg: 'rgba(255,255,255,0.06)',
+            darkItemBg: '#15211f',
+            darkSubMenuItemBg: '#15211f',
+            darkItemSelectedBg: '#1a7a6d',
+            darkItemHoverBg: 'rgba(255,255,255,0.05)',
             itemMarginInline: 8,
-            itemBorderRadius: 8,
+            itemBorderRadius: 10,
           },
           Table: {
-            headerBg: isDark ? '#1e293b' : '#f8fafc',
-            headerColor: isDark ? '#cbd5e1' : '#475569',
+            headerBg: isDark ? '#1b2623' : '#eef3f1',
+            headerColor: isDark ? '#b7c9c3' : '#4d635e',
             headerSplitColor: 'transparent',
-            rowHoverBg: isDark ? '#1e293b' : '#f8fbff',
+            rowHoverBg: isDark ? '#1b2623' : '#e7f1ed',
             cellPaddingBlock: 12,
           },
           Button: {

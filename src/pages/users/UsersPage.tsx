@@ -11,7 +11,6 @@ import {
   Space,
   Switch,
   Table,
-  Tag,
   Tooltip,
   message,
 } from 'antd'
@@ -171,13 +170,13 @@ export function UsersPage() {
       dataIndex: 'remark',
       ellipsis: true,
       width: 180,
-      render: (remark: string) => remark || '—',
+      render: (remark: string) => remark || '-',
     },
     {
       title: t('users.role'),
       dataIndex: 'role',
       width: 120,
-      render: (role: Role) => <Tag color={role === 'admin' ? 'gold' : 'blue'}>{role === 'admin' ? t('role.admin') : t('role.user')}</Tag>,
+      render: (role: Role) => <span className="role-chip">{role === 'admin' ? t('role.admin') : t('role.user')}</span>,
     },
     {
       title: t('users.status'),
@@ -279,7 +278,7 @@ export function UsersPage() {
   return (
     <>
       {messageContext}
-      <div className="app-surface flex h-full min-h-0 flex-col overflow-hidden">
+      <div className="users-page app-surface flex h-full min-h-0 flex-col">
         {usersQuery.isError ? (
           <ApiErrorPanel error={usersQuery.error} onRetry={() => void usersQuery.refetch()} />
         ) : (

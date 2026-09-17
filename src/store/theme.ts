@@ -13,7 +13,9 @@ function readStoredTheme(): ThemeMode {
 function applyTheme(mode: ThemeMode) {
   if (typeof document === 'undefined') return
   document.documentElement.classList.toggle('dark', mode === 'dark')
-  document.documentElement.style.colorScheme = mode
+  window.requestAnimationFrame(() => {
+    document.documentElement.style.colorScheme = mode
+  })
 }
 
 type ThemeStore = {

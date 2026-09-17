@@ -1,7 +1,5 @@
 export const zhCN = {
   common: {
-    appName: 'SpringHere',
-    appSubtitle: '管理服务',
     retry: '重试',
     loading: '加载中',
     language: '语言',

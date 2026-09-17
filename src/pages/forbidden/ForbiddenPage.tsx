@@ -7,7 +7,7 @@ export function ForbiddenPage() {
   const { t } = useI18n()
 
   return (
-    <div className="grid h-full place-items-center">
+    <div className="grid h-full place-items-center px-4">
       <Result
         status="403"
         title={t('forbidden.title')}

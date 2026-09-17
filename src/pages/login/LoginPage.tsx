@@ -6,8 +6,10 @@ import { getCaptcha, type CaptchaData, type LoginRequest } from '@/api/auth.ts'
 import { ApiError, mapApiError, type ApiErrorCode } from '@/api/client/index.ts'
 import { AppearanceControls } from '@/components/AppearanceControls.tsx'
 import { PageLoading } from '@/components/PageLoading.tsx'
+import { appConfig, localeText } from '@/config/index.ts'
 import { useI18n } from '@/locales/index.ts'
 import { useAuth } from '@/store/auth.ts'
+import type { LocaleCode } from '@/store/locale.ts'
 
 type LoginValues = { email: string; password: string; captcha: string }
 type LoginLocationState = {
@@ -51,7 +53,7 @@ export function LoginPage() {
 }
 
 function LoginForm({ signIn }: { signIn: (input: LoginRequest) => Promise<void> }) {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const [form] = Form.useForm<LoginValues>()
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -127,79 +129,117 @@ function LoginForm({ signIn }: { signIn: (input: LoginRequest) => Promise<void> 
 
   return (
     <main className="login-page">
-      <AppearanceControls className="login-toolbar" />
-      <div className="login-card">
-        <div className="login-brand">
-          <span className="login-brand-mark">S</span>
-          <p className="login-brand-name">{t('common.appName')}</p>
-          <p className="login-brand-sub">{t('common.appSubtitle')}</p>
-        </div>
-        {error && <Alert className="mb-4" type="error" showIcon title={error} />}
-        <Form<LoginValues> form={form} layout="vertical" requiredMark={false} onFinish={(values) => void submit(values)}>
-          <Form.Item
-            name="email"
-            label={t('login.email')}
-            rules={[
-              { required: true, message: t('login.emailRequired') },
-              { type: 'email', message: t('login.emailInvalid') },
-            ]}
-          >
-            <Input size="large" autoComplete="email" placeholder="admin@example.com" />
-          </Form.Item>
-          <Form.Item name="password" label={t('login.password')} rules={[{ required: true, message: t('login.passwordRequired') }]}>
-            <Input.Password size="large" autoComplete="current-password" placeholder={t('login.passwordRequired')} />
-          </Form.Item>
-          <Form.Item label={t('login.captcha')} required>
-            <div className="login-captcha">
-              <Form.Item
-                name="captcha"
-                noStyle
-                rules={[
-                  { required: true, message: t('login.captchaRequired') },
-                  { len: 4, message: t('login.captchaLength') },
-                ]}
-              >
-                <Input
+      <div className="login-stage">
+        <aside className="login-panel">
+          <span className="login-panel-mark">{appConfig.mark}</span>
+          <h1 className="login-panel-name">{appConfig.name}</h1>
+          <p className="login-panel-sub">{localeText(appConfig.subtitle, locale)}</p>
+          <p className="login-panel-lead">{localeText(appConfig.login.lead, locale)}</p>
+        </aside>
+        <section className="login-form-pane">
+          <AppearanceControls className="login-toolbar" />
+          <div className="login-form-body">
+            <div className="login-form-card">
+              {error && <Alert className="mb-4" type="error" showIcon title={error} />}
+              <Form<LoginValues> form={form} layout="vertical" requiredMark={false} onFinish={(values) => void submit(values)}>
+                <Form.Item
+                  name="email"
+                  label={t('login.email')}
+                  rules={[
+                    { required: true, message: t('login.emailRequired') },
+                    { type: 'email', message: t('login.emailInvalid') },
+                  ]}
+                >
+                  <Input size="large" autoComplete="email" placeholder={appConfig.login.emailPlaceholder} />
+                </Form.Item>
+                <Form.Item name="password" label={t('login.password')} rules={[{ required: true, message: t('login.passwordRequired') }]}>
+                  <Input.Password size="large" autoComplete="current-password" placeholder={t('login.passwordRequired')} />
+                </Form.Item>
+                <Form.Item label={t('login.captcha')} required>
+                  <div className="login-captcha">
+                    <Form.Item
+                      name="captcha"
+                      noStyle
+                      rules={[
+                        { required: true, message: t('login.captchaRequired') },
+                        { len: 4, message: t('login.captchaLength') },
+                      ]}
+                    >
+                      <Input
+                        size="large"
+                        maxLength={4}
+                        autoComplete="off"
+                        autoCapitalize="characters"
+                        spellCheck={false}
+                        placeholder={t('login.captchaPlaceholder')}
+                      />
+                    </Form.Item>
+                    <button
+                      type="button"
+                      className="login-captcha-image"
+                      onClick={() => void loadCaptcha()}
+                      disabled={captchaLoading}
+                      title={t('login.captchaRefresh')}
+                      aria-label={t('login.captchaRefresh')}
+                    >
+                      {captcha ? (
+                        <img src={captcha.image} alt={t('login.captchaAlt')} />
+                      ) : (
+                        <span className="login-captcha-placeholder">
+                          {captchaLoading ? t('login.captchaLoading') : t('login.captchaFetch')}
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                </Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
                   size="large"
-                  maxLength={4}
-                  autoComplete="off"
-                  autoCapitalize="characters"
-                  spellCheck={false}
-                  placeholder={t('login.captchaPlaceholder')}
-                />
-              </Form.Item>
-              <button
-                type="button"
-                className="login-captcha-image"
-                onClick={() => void loadCaptcha()}
-                disabled={captchaLoading}
-                title={t('login.captchaRefresh')}
-                aria-label={t('login.captchaRefresh')}
-              >
-                {captcha ? (
-                  <img src={captcha.image} alt={t('login.captchaAlt')} />
-                ) : (
-                  <span className="login-captcha-placeholder">
-                    {captchaLoading ? t('login.captchaLoading') : t('login.captchaFetch')}
-                  </span>
-                )}
-              </button>
+                  icon={<LockOutlined />}
+                  loading={submitting}
+                  disabled={captchaLoading && !captcha}
+                  aria-label={t('login.submit')}
+                  block
+                >
+                  {t('login.submit')}
+                </Button>
+              </Form>
             </div>
-          </Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            size="large"
-            icon={<LockOutlined />}
-            loading={submitting}
-            disabled={captchaLoading && !captcha}
-            aria-label={t('login.submit')}
-            block
-          >
-            {t('login.submit')}
-          </Button>
-        </Form>
+          </div>
+          <LoginFooter locale={locale} />
+        </section>
       </div>
     </main>
+  )
+}
+
+function LoginFooter({ locale }: { locale: LocaleCode }) {
+  const { footer } = appConfig
+  const copyright = localeText(footer.copyright, locale)
+  const note = localeText(footer.note, locale)
+  const links = footer.links.filter((link) => localeText(link.label, locale) && link.href)
+
+  if (!copyright && !note && !footer.icp && links.length === 0) return null
+
+  return (
+    <footer className="login-footer">
+      {copyright ? <p>{copyright}</p> : null}
+      {note ? <p>{note}</p> : null}
+      {footer.icp ? (
+        <a href={footer.icpHref} target="_blank" rel="noreferrer">
+          {footer.icp}
+        </a>
+      ) : null}
+      {links.length > 0 ? (
+        <p className="login-footer-links">
+          {links.map((link) => (
+            <a key={`${link.href}-${localeText(link.label, locale)}`} href={link.href} target="_blank" rel="noreferrer">
+              {localeText(link.label, locale)}
+            </a>
+          ))}
+        </p>
+      ) : null}
+    </footer>
   )
 }
